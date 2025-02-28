@@ -37,7 +37,7 @@ exports.getCarbooking=async(req,res,next)=>{
 
         res.status(200).json({
             success:true,
-            data:Carbooking
+            data:carbooking
         });
     }
     catch(err){
@@ -58,7 +58,7 @@ exports.createCarbooking= async (req,res,next)=>{
 
     res.status(201).json({
         success: true,
-        data:Carbooking
+        data:carbooking
     })
 
 };
@@ -81,7 +81,8 @@ exports.updateCarbooking=async(req,res,next)=>{
         }
 
         res.status(200).json({
-            success:true
+            success:true,
+            data:carbooking
         });
     }catch(err){
         res.status(400).json({
