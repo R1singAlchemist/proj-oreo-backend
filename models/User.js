@@ -21,20 +21,29 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: [true , 'Please add a password'],
-        minlinegth: 6,
+        minlength: 6,
         select: false
     },
+    phone: { type: String, 
+        required: true,
+        match: [/^\d{10}$/, 'Invalid phone number'] },
     resetPasswordToken : String,
     resetPasswordExpire: Date,
     createdAt : {
         type: Date,
         default:Date.now
     }
-});
+},{ timestamps: true });
+
 
 //Encrypt password using bcrypt
 
 UserSchema.pre('save', async function(next){
+
+    if (!this.isModified('password')) {
+        return next();
+    }
+
     const salt = await bcrypt.genSalt(10);
     this.password= await bcrypt.hash(this.password,salt);
 });

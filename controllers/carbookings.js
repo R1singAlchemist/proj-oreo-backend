@@ -51,9 +51,7 @@ exports.getCarbooking=async(req,res,next)=>{
 //@route POST /api/v1/carbookings
 //@access Private
 exports.createCarbooking= async (req,res,next)=>{
-    //console.log(req.body);
-    //res.status(200).json({success:true, msg:'Create new hospitals'});
-
+    
     const carbooking = await Carbooking.create(req.body);
 
     res.status(201).json({
