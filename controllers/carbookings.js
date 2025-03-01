@@ -6,13 +6,14 @@ const Provider = require("../models/Provider");
 //@access Public
 exports.getCarbookings = async (req, res, next) => {
   try {
+    
     let carbookings;
 
     if (req.user.role === "admin") {
-      carbookings = await Carbooking.find();
+      carbookings = await Carbooking.find().populate("user").populate("provider");;
     } else {
     
-      carbookings = await Carbooking.find({ user: req.user.id });
+      carbookings = await Carbooking.find({ user: req.user.id }).populate("user").populate("provider");;
     }
 
     if (carbookings.length === 0) {
@@ -39,7 +40,7 @@ exports.getCarbookings = async (req, res, next) => {
 //@access Public
 exports.getCarbooking = async (req, res, next) => {
   try {
-    const carbooking = await Carbooking.findById(req.params.id);
+    const carbooking = await Carbooking.findById(req.params.id).populate("user").populate("provider");
 
     if (!carbooking) {
       return res.status(400).json({
