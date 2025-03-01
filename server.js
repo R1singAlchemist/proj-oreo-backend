@@ -4,6 +4,7 @@ const cookieParser=require('cookie-parser');
 
 const dotenv = require('dotenv');
 const carbookings = require ('./routes/carbookings');
+const providers = require ('./routes/providers');
 const app = express();
 const auth = require('./routes/auth');
 
@@ -25,6 +26,8 @@ app.use(cookieParser());
 app.use('/api/v1/auth', auth)
 
 app.use('/api/v1/carbookings',carbookings);
+
+app.use('/api/v1/providers', providers)
 
 const server = app.listen(PORT, console.log('Server running in ', process.env.NODE_ENV, ' mode on port ', PORT));
 

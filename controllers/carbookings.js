@@ -1,4 +1,5 @@
 const Carbooking = require("../models/Carbooking");
+const Provider = require("../models/Provider");
 
 //@desc Get all carbookings
 //@route GET /api/v1/carbookings
@@ -31,7 +32,8 @@ exports.getCarbooking=async(req,res,next)=>{
 
         if(!carbooking){
             return res.status(400).json({
-                success:false
+                success:false,
+                msg:"No Carbooking with specified ID"
             })
         }
 
@@ -39,10 +41,13 @@ exports.getCarbooking=async(req,res,next)=>{
             success:true,
             data:carbooking
         });
+
     }
     catch(err){
+        console.log(err);
         res.status(400).json({
-            success:false
+            success:false,
+            msg:"Error occured"
         })
     }
 };
@@ -51,12 +56,27 @@ exports.getCarbooking=async(req,res,next)=>{
 //@route POST /api/v1/carbookings
 //@access Private
 exports.createCarbooking= async (req,res,next)=>{
+
+    const provider = Provider.find({
+        name : `${req.body.provider}`
+    });
+
+    if(!provider){
+        res.status(400).json({
+            success : false,
+            msg: "No Provider with specified name"
+        })
+    }else{
+        req.body.provider = provider._id;
+    }
     
-    const carbooking = await Carbooking.create(req.body);
+    
+    //const carbooking = await Carbooking.create(req.body);
 
     res.status(201).json({
         success: true,
-        data:carbooking
+        msg : `${req.body.provider}`
+        //data:carbooking
     })
 
 };
