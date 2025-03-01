@@ -27,19 +27,13 @@ const CarbookingSchema = new mongoose.Schema({
             {
                 model: String,
                 brand: String,
-                pricePerDay: Number,
-                availability: { type: Boolean, default: true }
+                pricePerDay: Number
             }
         ],
         default: [],
-        required: true,
-        validate: [arrayLimit, 'A user can book up to 3 cars only']
+        required: true
     }
 });
-
-function arrayLimit(val) {
-    return val.length <= 3; 
-}
 
 
 
