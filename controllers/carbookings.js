@@ -187,7 +187,7 @@ exports.deleteCarbookings = async (req, res, next) => {
     }
 
     //deletedata
-    await carbooking.delete();
+    await Carbooking.findByIdAndDelete(req.params.id);
 
     res.status(200).json({
       success: true,
