@@ -5,14 +5,14 @@ const User = require('../models/User');
 //@access Public
 exports.register= async (req,res,next)=>{
    try{
-    const {name , email, password, phone }=req.body;
-    const role = 'user';
+    const {name , email, password, phone, role }=req.body;
+    const userRole = role || 'user';
     //Create User
     const user = await User.create({
         name,
         email,
         password,
-        role,
+        role: userRole,
         phone
     });
 
@@ -59,16 +59,6 @@ exports.login= async( req,res,next)=>{
             msg : 'Invalid credentials'
         });
     }
-    
-    //Create token
-    /*
-    const token = user.getSignedJwtToken();
-
-    res.status(200).json({
-        success : true,
-        token
-    });
-    */
    
     sendTokenResponse(user,200,res);
 }
@@ -108,6 +98,13 @@ exports.getMe=async(req,res,next)=>{
 //@route     GET /api/v1/auth/logout
 //@access    Private
 exports.logout = async (req, res, next) => {
+
+    if (!req.cookies.token) {
+        return res.status(400).json({ 
+            success: false, 
+            message: "No user is logged in" 
+        });
+    }
     res.cookie("token", "none", {
       expires: new Date(Date.now() + 10 * 1000),
       httpOnly: true,
@@ -116,6 +113,8 @@ exports.logout = async (req, res, next) => {
     res.status(200).json({
       success: true,
       data: {},
+      message: "Logged out successfully"
     });
-  };
+    
+};
 

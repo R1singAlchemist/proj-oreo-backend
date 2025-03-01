@@ -6,7 +6,21 @@ const Provider = require("../models/Provider");
 //@access Public
 exports.getCarbookings = async (req, res, next) => {
   try {
-    const carbookings = await Carbooking.find();
+    let carbookings;
+
+    if (req.user.role === "admin") {
+      carbookings = await Carbooking.find();
+    } else {
+    
+      carbookings = await Carbooking.find({ user: req.user.id });
+    }
+
+    if (carbookings.length === 0) {
+      return res.status(404).json({
+        success: false,
+        msg: "No car bookings found for this user",
+      });
+    }
 
     res.status(200).json({
       success: true,
@@ -107,55 +121,84 @@ exports.createCarbooking = async (req, res, next) => {
 //@route PUT /api/v1/carbookings/:id
 //@access Private
 exports.updateCarbooking = async (req, res, next) => {
-  //res.status(200).json({success:true, msg:'Update hospital '+req.params.id});
   try {
-    const carbooking = await Carbooking.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      {
-        new: true,
-        runValidators: true,
-      }
-    );
-
+    //find ID
+    const carbooking = await Carbooking.findById(req.params.id);
+    //if error
     if (!carbooking) {
       return res.status(400).json({
         success: false,
+        msg: "No Carbooking found with specified ID",
       });
     }
 
-    res.status(200).json({
-      success: true,
-      data: carbooking,
-    });
+    //if user = admin or owner
+    if (req.user.role === "admin" || carbooking.user.toString() === req.user.id) {
+      // update
+      const updatedCarbooking = await Carbooking.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        {
+          new: true, 
+          runValidators: true, 
+        }
+      );
+
+      res.status(200).json({
+        success: true,
+        data: updatedCarbooking,
+      });
+    } else {
+      return res.status(401).json({
+        success: false,
+        msg: "You can only update your own car bookings or if you're an admin",
+      });
+    }
   } catch (err) {
+    console.log(err);
     res.status(400).json({
       success: false,
+      msg: "Error occurred",
     });
   }
 };
 
-//@desc delete carbooking
+//@desc Delete carbooking
 //@route DELETE /api/v1/carbookings/:id
 //@access Private
 exports.deleteCarbookings = async (req, res, next) => {
-  //res.status(200).json({success:true, msg : 'Delete hospital '+req.params.id});
   try {
-    const carbooking = await Carbooking.findByIdAndDelete(req.params.id);
+    // ค้นหา carbooking ตาม ID
+    const carbooking = await Carbooking.findById(req.params.id);
 
     if (!carbooking) {
       return res.status(400).json({
         success: false,
+        msg: "No Carbooking found to delete",
       });
     }
+
+    
+    if (req.user.role !== 'admin' && req.user.id !== carbooking.user.toString()) {
+      return res.status(403).json({
+        success: false,
+        msg: "You are not authorized to delete this carbooking",
+      });
+    }
+
+    //deletedata
+    await carbooking.delete();
 
     res.status(200).json({
       success: true,
       data: {},
     });
   } catch (err) {
+    console.log(err);
     res.status(400).json({
       success: false,
+      msg: "Error occurred",
     });
   }
 };
+
