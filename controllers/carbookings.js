@@ -101,11 +101,13 @@ exports.createCarbooking = async (req, res, next) => {
 
       carbooking.bookingDate = bookingDate;
 
+      const carbookingID = carbooking.id;
+
       const returnQuery = await Carbooking.findById(carbooking.id).populate("user").populate("provider");
 
       res.status(201).json({
         success: true,
-        msg: bookingDate,
+        msg: carbookingID,
         data: returnQuery
       });
     }
