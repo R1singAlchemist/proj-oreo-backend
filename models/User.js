@@ -57,6 +57,16 @@ UserSchema.methods.getSignedJwtToken=function() {
     );
 }; 
 
+//Sing JWT and return
+UserSchema.methods.getName=function() {
+    return this.name;
+}; 
+
+UserSchema.methods.getRole=function() {
+    return this.role;
+}; 
+
+
 //Match user entered password to hashed password in database
 
 UserSchema.methods.matchPassword = async function(enteredPassword) {
