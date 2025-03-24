@@ -95,11 +95,20 @@ exports.createCarbooking = async (req, res, next) => {
       }
 
       //Parse date
-      const bookingDate = new Date(req.body.bookingDate);
+      const pickupDate = new Date(req.body.pickupDate);
+      const returnDate = new Date(req.body.returnDate);
+
+      if( pickupDate.getTime() >= returnDate.getTime()){
+        return res.status(400).json({
+          success: false,
+          message: `The pickup date is the same or after the return date`
+        })
+      }
 
       const carbooking = await Carbooking.create(req.body);
 
-      carbooking.bookingDate = bookingDate;
+      carbooking.pickupDate = pickupDate;
+      carbooking.returnDate = returnDate;
 
       const carbookingID = carbooking.id;
 
