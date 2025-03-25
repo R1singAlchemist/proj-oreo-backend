@@ -139,7 +139,7 @@ exports.updateCarbooking = async (req, res, next) => {
       const returnDate = new Date(req.body.returnDate);
 
       if( pickupDate.getTime() >= returnDate.getTime()){
-        return res.status(400).json({
+        return res.status(405).json({
           success: false,
           message: `The pickup date is the same or after the return date`
         })
