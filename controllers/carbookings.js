@@ -86,7 +86,7 @@ exports.createCarbooking = async (req, res, next) => {
 
       //If the user is not an admin, they can only create 3 bookings.
       if (existedBooking.length >= 3 && req.user.role !== "admin") {
-        return res.status(400).json({
+        return res.status(406).json({
           success: false,
           message: `The user with ID ${req.user.id} has already made 3 bookings`,
         });
@@ -97,7 +97,7 @@ exports.createCarbooking = async (req, res, next) => {
       const returnDate = new Date(req.body.returnDate);
 
       if( pickupDate.getTime() >= returnDate.getTime()){
-        return res.status(400).json({
+        return res.status(405).json({
           success: false,
           message: `The pickup date is the same or after the return date`
         })
