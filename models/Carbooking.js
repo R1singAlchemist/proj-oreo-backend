@@ -14,11 +14,11 @@ const CarbookingSchema = new mongoose.Schema({
         required: [true, 'Please specify a provider']
     },
     pickupDate: {
-        type:Date,
+        type:String,
         required:[true, 'Please specify a Date']
     },
     returnDate: {
-        type:Date,
+        type:String,
         required:[true, 'Please specify a Date']
     }
     

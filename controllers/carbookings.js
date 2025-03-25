@@ -105,9 +105,6 @@ exports.createCarbooking = async (req, res, next) => {
 
       const carbooking = await Carbooking.create(req.body);
 
-      carbooking.pickupDate = pickupDate;
-      carbooking.returnDate = returnDate;
-
       const carbookingID = carbooking.id;
 
       const returnQuery = await Carbooking.findById(carbooking.id).populate("user").populate("provider");
@@ -156,8 +153,8 @@ exports.updateCarbooking = async (req, res, next) => {
       }
 
       const update = {
-        pickupDate : pickupDate,
-        returnDate : returnDate
+        pickupDate : req.body.pickupDate,
+        returnDate : req.body.returnDate
       }
 
       const updatedCarbooking = await Carbooking.findByIdAndUpdate(
