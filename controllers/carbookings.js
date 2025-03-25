@@ -67,9 +67,7 @@ exports.getCarbooking = async (req, res, next) => {
 //@access Private
 exports.createCarbooking = async (req, res, next) => {
   try {
-    const provider = await Provider.findOne({
-      name: req.body.provider,
-    });
+    const provider = await Provider.findById(req.body.providerId)
 
     if (!provider) {
       console.log("Provider not found");
