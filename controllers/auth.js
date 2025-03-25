@@ -13,7 +13,7 @@ exports.register = async (req, res, next) => {
     console.log(emailExists);
 
     if (emailExists) {
-      res.status(400).json({
+      res.status(406).json({
         success: false,
         msg: "Email already registered",
       });
