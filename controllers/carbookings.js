@@ -16,13 +16,6 @@ exports.getCarbookings = async (req, res, next) => {
       carbookings = await Carbooking.find({ user: req.user.id }).populate("user").populate("provider");;
     }
 
-    if (carbookings.length === 0) {
-      return res.status(404).json({
-        success: false,
-        msg: "No car bookings found for this user",
-      });
-    }
-
     res.status(200).json({
       success: true,
       count: carbookings.length,
