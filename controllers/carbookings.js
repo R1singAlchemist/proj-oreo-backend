@@ -147,9 +147,24 @@ exports.updateCarbooking = async (req, res, next) => {
     //if user = admin or owner
     if (req.user.role === "admin" || carbooking.user.toString() === req.user.id) {
       // update
+      const pickupDate = new Date(req.body.pickupDate);
+      const returnDate = new Date(req.body.returnDate);
+
+      if( pickupDate.getTime() >= returnDate.getTime()){
+        return res.status(400).json({
+          success: false,
+          message: `The pickup date is the same or after the return date`
+        })
+      }
+
+      const update = {
+        pickupDate : pickupDate,
+        returnDate : returnDate
+      }
+
       const updatedCarbooking = await Carbooking.findByIdAndUpdate(
         req.params.id,
-        req.body,
+        update,
         {
           new: true, 
           runValidators: true, 

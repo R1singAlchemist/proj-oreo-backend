@@ -34,6 +34,10 @@ const providerSchema = new mongoose.Schema({
       type: Number,
       required: [true, "Please add price per day"],
     },
+    imageURL: {
+      type : String,
+      required: [true, "Please add imageUrl"],
+    }
   },
 });
 

@@ -23,6 +23,36 @@ exports.getProviders= async(req, res, next) => {
     }
 }
 
+//@desc Get provider
+//@route GET /api/v1/providers/id 
+//@access Public
+exports.getProvider= async(req, res, next) => {
+    try{
+
+        const provider = await Provider.findById(req.params.id);
+
+        if(!provider){
+            return res.status(400).json({
+                success: false,
+                msg: "No Provider with specified ID",
+              });
+        }
+
+        res.status(200).json({
+            success : true,
+            count : providers.length,
+            data : providers
+        })
+
+    }catch(err){
+        console.log(err);
+        res.status(400).json({
+            success: false,
+            msg : 'Error has occured'
+        });
+    }
+}
+
 //@desc Create new provider
 //@route POST /api/v1/providers
 //@access PRIVATE
